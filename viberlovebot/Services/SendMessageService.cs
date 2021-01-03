@@ -27,7 +27,7 @@ namespace viberlovebot.Services
             };
             var response = await _api.SendTextMessage(message);
 
-            if (!response.Success == false)
+            if (response.Success == false)
                 _logger.LogError(response.ErrorMessage);
             if (response.Status != 0)
                 _logger.LogError(response.StatusMessage);

@@ -55,13 +55,10 @@ namespace viberlovebot.Services
 
         public void HandleMessageEvent(CallbackEvent @event)
         {
-            if (@event.Type == CallbackEventTypes.Message)
+            var responses = _messageResponseService.CreateResponseFor(@event.Message, @event.Sender);
+            foreach (var response in responses)
             {
-                var responses = _messageResponseService.CreateResponseFor(@event.Message, @event.Sender);
-                foreach (var response in responses)
-                {
-                    SendMessage(response, @event.Sender.Id);
-                }
+                SendMessage(response, @event.Sender.Id);
             }
         }
 
