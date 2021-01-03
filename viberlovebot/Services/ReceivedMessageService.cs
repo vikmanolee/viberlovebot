@@ -1,31 +1,38 @@
-using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using viberlovebot.Abstractions;
+using viberlovebot.Enumerations;
+using viberlovebot.Models;
 using ViberBotApi;
 using ViberBotApi.Models;
-using Sent = ViberBotApi.Models.Sent;
-using Received = ViberBotApi.Models.Received;
+using ViberBotApi.Models.Sent;
+using ViberBotApi.Models.Received;
 
 namespace viberlovebot.Services
 {
     public class ReceivedMessageService : IReceivedMessageService
     {
+        private readonly IMessageResponseService _messageResponseService;
         private readonly ISendMessageService _sendMessageService;
         private readonly BotConfiguration _botConfig;
         private readonly ViberBotWebhookHandler _handler;
 
         private ILogger _logger;
 
-        public ReceivedMessageService(ISendMessageService sendMessageService, IOptions<BotConfiguration> botConfig, ILogger<ReceivedMessageService> logger)
+        public ReceivedMessageService(IMessageResponseService messageResponseService,
+                                      ISendMessageService sendMessageService,
+                                      IOptions<BotConfiguration> botConfig,
+                                      ILogger<ReceivedMessageService> logger)
         {
             _logger = logger;
+            _messageResponseService = messageResponseService;
             _sendMessageService = sendMessageService;
             _botConfig = botConfig.Value;
             _handler = new ViberBotWebhookHandler();
             AddHandlers(_handler);
         }
 
-        public Sent.TextMessage HandleMessage(Received.CallbackEvent message)
+        public TextMessage HandleMessage(CallbackEvent message)
         {
             return _handler.HandleEvent(message);
         }
@@ -36,38 +43,41 @@ namespace viberlovebot.Services
             _handler.receivedMessageHandler = HandleMessageEvent;
         }
 
-        public Sent.TextMessage HandleConversationStartedEvent(Received.CallbackEvent message)
+        public TextMessage HandleConversationStartedEvent(CallbackEvent @event)
         {
-            return new Sent.TextMessage
+            return new TextMessage
             {
                 Text = _botConfig.WelcomeMessage,
-                Sender = new Sent.Sender { Name = _botConfig.Sender.Name },
+                Sender = new Sender { Name = _botConfig.Sender.Name },
                 TrackingData = "tracking welcome message"
             };
         }
 
-        public void HandleMessageEvent(Received.CallbackEvent message)
+        public void HandleMessageEvent(CallbackEvent @event)
         {
-            var receiver = (Received.Sender)message.Sender;
-            var answer = AnswerText(message.Message);
-            int sticker = 5716;
-            if (string.IsNullOrEmpty(answer))
+            if (@event.Type == CallbackEventTypes.Message)
             {
-                answer = $"{receiver.Name}, το bot αυτό δεν είναι τόσο εξελιγμένο ακόμα ώστε να καταλαβαίνει τι του λες. Στην επόμενη version θα τα πάμε καλύτερα. Πάρε, όμως, ένα sticker για τώρα.";
-                sticker = Stickers.Random;
+                var responses = _messageResponseService.CreateResponseFor(@event.Message, @event.Sender);
+                foreach (var response in responses)
+                {
+                    SendMessage(response, @event.Sender.Id);
+                }
             }
-            _sendMessageService.TextMessage(receiver.Id, answer);
-            _sendMessageService.StickerMessage(receiver.Id, sticker);
         }
 
-        private string AnswerText(Received.MessageReceived message)
+        private void SendMessage(ResponseMessage response, string receiverId)
         {
-            if (message.Type == MessageTypes.Text)
+            switch (response.Type)
             {
-                if (Regex.IsMatch(message.Text, @"([Κκ]αλ[ηή] [Χχ]ρονι[αά])|([Χχ]ρ[όο]νια [Ππ]ολλ[άα])"))
-                    return "Καλή χρονιά και χρόνια πολλά! Με υγεία κι ευτυχία το νέο έτος!";
+                case ResponseMessageType.Text:
+                    _sendMessageService.TextMessage(receiverId, response.Text);
+                    break;
+                case ResponseMessageType.Sticker:
+                    _sendMessageService.StickerMessage(receiverId, response.StickerId);
+                    break;
+                default:
+                    break;
             }
-            return "";
         }
     }
 }

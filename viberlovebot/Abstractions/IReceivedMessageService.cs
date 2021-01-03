@@ -1,7 +1,7 @@
 using ViberBotApi.Models.Received;
 using ViberBotApi.Models.Sent;
 
-namespace viberlovebot.Services
+namespace viberlovebot.Abstractions
 {
     public interface IReceivedMessageService
     {

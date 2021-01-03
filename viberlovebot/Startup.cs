@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using viberlovebot.Abstractions;
 using viberlovebot.Services;
 using ViberBotApi.Configuration;
 
@@ -28,6 +29,7 @@ namespace viberlovebot
                 viberConfig.BaseUrl = Configuration.GetValue<string>("ViberApi:BaseUrl");
             });
             services.Configure<BotConfiguration>(Configuration.GetSection("Bot"));
+            services.AddScoped<IMessageResponseService, MessageResponseService>();
             services.AddScoped<ISendMessageService, SendMessageService>();
             services.AddScoped<IReceivedMessageService, ReceivedMessageService>();
             services.AddControllers(options =>

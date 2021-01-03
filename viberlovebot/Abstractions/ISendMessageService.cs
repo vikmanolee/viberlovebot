@@ -1,4 +1,4 @@
-namespace viberlovebot.Services
+namespace viberlovebot.Abstractions
 {
     public interface ISendMessageService
     {

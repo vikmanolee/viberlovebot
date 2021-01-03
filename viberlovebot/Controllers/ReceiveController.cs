@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using ViberBotApi.Models.Sent;
 using ViberBotApi.Models.Received;
-using viberlovebot.Services;
+using viberlovebot.Abstractions;
 
 namespace viberlovebot.Controllers
 {

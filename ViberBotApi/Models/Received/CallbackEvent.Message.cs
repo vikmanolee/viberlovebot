@@ -4,12 +4,12 @@ namespace ViberBotApi.Models.Received
 {
     public partial class CallbackEvent
     {
-        public Sender Sender { get; set; }
+        public SenderReceived Sender { get; set; }
 
         public MessageReceived Message { get; set; }
     }
 
-    public class Sender
+    public class SenderReceived
     {
         public string Id { get; set; }
         public string Name { get; set; }
