@@ -7,5 +7,6 @@ namespace ViberBotApi.Abstractions
     {
         Task<SendMessageResponse> SendTextMessage(TextMessage message);
         Task<SendMessageResponse> SendStickerMessage(StickerMessage message);
+        Task<SendMessageResponse> SendUrlMessage(UrlMessage message);
     }
 }

@@ -10,6 +10,7 @@ namespace viberlovebot.Enumerations
         Contact,
         Sticker,
         RichMedia,
-        Url
+        Url,
+        AnimatedGif
     }
 }

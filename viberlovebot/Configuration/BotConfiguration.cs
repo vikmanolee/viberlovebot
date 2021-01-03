@@ -1,12 +1,12 @@
 namespace viberlovebot
 {
-    public class BotConfiguration
+    public class BotOptions
     {
         public string WelcomeMessage { get; set; }
 
-        public SenderConfiguration Sender { get; set; }
+        public SenderOptions Sender { get; set; }
 
-        public class SenderConfiguration
+        public class SenderOptions
         {
             public string Name { get; set; }
             public string Avatar { get; set; } = null;

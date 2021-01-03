@@ -14,12 +14,12 @@ namespace viberlovebot.Services
     public class MessageResponseService : IMessageResponseService
     {
         private readonly ISendMessageService _sendMessageService;
-        private readonly BotConfiguration _botConfig;
+        private readonly BotOptions _botConfig;
         private readonly ViberBotWebhookHandler _handler;
 
         private ILogger _logger;
 
-        public MessageResponseService(ISendMessageService sendMessageService, IOptions<BotConfiguration> botConfig, ILogger<ReceivedMessageService> logger)
+        public MessageResponseService(ISendMessageService sendMessageService, IOptions<BotOptions> botConfig, ILogger<ReceivedMessageService> logger)
         {
             _logger = logger;
             _sendMessageService = sendMessageService;
@@ -41,6 +41,7 @@ namespace viberlovebot.Services
                     break;
                 case MessageCategory.Pasok:
                     responses.Add(new ResponseMessage{ Type = ResponseMessageType.Sticker, StickerId = 68408});
+                    responses.Add(new ResponseMessage{ Type = ResponseMessageType.AnimatedGif, MediaUrl = "https://media.giphy.com/media/TIRQqWIimnH9xL0kJx/giphy-downsized.gif"});
                     break;
                 default:
                     responses.Add(new ResponseMessage{ Type = ResponseMessageType.Text, Text = $"{sender.Name}, το bot αυτό δεν είναι τόσο εξελιγμένο ακόμα ώστε να καταλαβαίνει τι του λες. Στην επόμενη version θα τα πάμε καλύτερα. Πάρε, όμως, ένα sticker για τώρα."});

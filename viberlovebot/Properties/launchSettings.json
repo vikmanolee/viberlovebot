@@ -24,8 +24,7 @@
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "ViberApi_AuthToken": "4caaa46c1c400d9b-a824d9ab018e3e77-639b2763b57bf29f"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   }

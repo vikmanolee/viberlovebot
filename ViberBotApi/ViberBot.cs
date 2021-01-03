@@ -31,6 +31,12 @@ namespace ViberBotApi
             return await HandleResponse(response);
         }
 
+        public async Task<SendMessageResponse> SendUrlMessage(UrlMessage message)
+        {
+            var response = await PostJsonHttpClient(UrlResources.SendMessage(), message);
+            return await HandleResponse(response);
+        }
+
         private async Task<HttpResponseMessage> PostJsonHttpClient<TMessage>(string uri, TMessage message)
         {
             return await _client.PostAsJsonAsync(uri, message);
