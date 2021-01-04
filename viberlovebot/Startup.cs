@@ -29,6 +29,7 @@ namespace viberlovebot
                 viberConfig.BaseUrl = Configuration.GetValue<string>("ViberApi:BaseUrl");
             });
             services.Configure<BotOptions>(Configuration.GetSection("Bot"));
+            services.AddSingleton<IMessageTokenCache>(new MessageTokenCache(Configuration.GetValue<int>("MessageTokenCacheSize")));
             services.AddScoped<IMessageResponseService, MessageResponseService>();
             services.AddScoped<ISendMessageService, SendMessageService>();
             services.AddScoped<IReceivedMessageService, ReceivedMessageService>();

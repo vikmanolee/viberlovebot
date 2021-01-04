@@ -13,25 +13,23 @@ namespace viberlovebot.Services
         private readonly ISendMessageService _sendMessageService;
         private readonly BotOptions _botOptions;
         private readonly ViberBotWebhookHandler _handler;
+        private readonly IMessageTokenCache _messageTokenCache;
 
         private ILogger _logger;
 
         public ReceivedMessageService(IMessageResponseService messageResponseService,
+                                      IMessageTokenCache messageTokenCache,
                                       ISendMessageService sendMessageService,
                                       IOptions<BotOptions> botConfig,
                                       ILogger<ReceivedMessageService> logger)
         {
             _logger = logger;
             _messageResponseService = messageResponseService;
+            _messageTokenCache = messageTokenCache;
             _sendMessageService = sendMessageService;
             _botOptions = botConfig.Value;
             _handler = new ViberBotWebhookHandler();
             AddHandlers(_handler);
-        }
-
-        public TextMessage HandleMessage(CallbackEvent message)
-        {
-            return _handler.HandleEvent(message);
         }
 
         private void AddHandlers(ViberBotWebhookHandler handler)
@@ -56,6 +54,22 @@ namespace viberlovebot.Services
             foreach (var response in responses)
             {
                 _sendMessageService.SendResponse(response, @event.Sender.Id);
+            }
+        }
+
+        public TextMessage HandleMessage(CallbackEvent message)
+        {
+            if (_messageTokenCache.Contains(message.MessageToken))
+            {
+                var e = new EventId(5000, "Already handled message");
+                _logger.LogInformation(e, "An event with message token: {0}, has already been handled, so it is discarded", message.MessageToken);
+                return null;
+            }
+            else
+            {
+                var result = _handler.HandleEvent(message);
+                _messageTokenCache.Add(message.MessageToken);
+                return result;
             }
         }
     }
