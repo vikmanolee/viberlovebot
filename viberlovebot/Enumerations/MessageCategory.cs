@@ -5,6 +5,9 @@ namespace viberlovebot.Enumerations
         Unknown,
         KaliXronia,
         Pasok,
-        OrderStart
+        OrderStart,
+        OrderPinsa,
+        OrderSnack,
+        OrderSandwitch
     }
 }

@@ -41,10 +41,24 @@ namespace viberlovebot.Services
                 case MessageCategory.OrderStart:
                     var url = _mediaUrlResolver.GetMenuImageFor("pala", "pala_front");
                     responses.Add(new ResponseMessage{ Type = ResponseMessageType.Picture, MediaUrl = url, Text = "Θα παραγγείλεις από το Pala"});
-                    responses.Add(new ResponseMessage{ Type = ResponseMessageType.Text, Text = "Τι θα προτιμούσες; pinsa (μια παραλλαγή πίτσας), σάντουιτς ή κάποιο snack;" });
+                    responses.Add(new ResponseMessage{ Type = ResponseMessageType.Text, Text = "Τι θα προτιμούσες;\npinsa (μια παραλλαγή πίτσας), σάντουιτς ή κάποιο snack;" });
+                    break;
+                case MessageCategory.OrderPinsa:
+                    var url2 = _mediaUrlResolver.GetMenuImageFor("pala", "pinse1");
+                    var url3 = _mediaUrlResolver.GetMenuImageFor("pala", "pinse2");
+                    responses.Add(new ResponseMessage{ Type = ResponseMessageType.Picture, MediaUrl = url2, Text = "Διάλεξε μια από αυτές"});
+                    responses.Add(new ResponseMessage{ Type = ResponseMessageType.Picture, MediaUrl = url3, Text = "... ή αυτές"});
+                    break;
+                case MessageCategory.OrderSnack:
+                    var url4 = _mediaUrlResolver.GetMenuImageFor("pala", "snacks");
+                    responses.Add(new ResponseMessage{ Type = ResponseMessageType.Picture, MediaUrl = url4, Text = "Διάλεξε κάποιο"});
+                    break;
+                case MessageCategory.OrderSandwitch:
+                    var url5 = _mediaUrlResolver.GetMenuImageFor("pala", "sandwiches");
+                    responses.Add(new ResponseMessage{ Type = ResponseMessageType.Picture, MediaUrl = url5, Text = "Διάλεξε κάποιο"});
                     break;
                 default:
-                    responses.Add(new ResponseMessage{ Type = ResponseMessageType.Text, Text = $"{sender.Name}, το bot αυτό δεν είναι τόσο εξελιγμένο ακόμα ώστε να καταλαβαίνει τι του λες. Στην επόμενη version θα τα πάμε καλύτερα. Πάρε, όμως, ένα sticker για τώρα."});
+                    responses.Add(new ResponseMessage{ Type = ResponseMessageType.Text, Text = FillPlaceholders(_botConfig.DefaultMessage, sender)});
                     responses.Add(new ResponseMessage{ Type = ResponseMessageType.Sticker, StickerId = Stickers.Random});
                     break;
             }
@@ -68,8 +82,27 @@ namespace viberlovebot.Services
                 {
                     return MessageCategory.OrderStart;
                 }
+                if (Regex.IsMatch(message.Text, @"([Ππ][ιί]τσα)|([Pp]insa)"))
+                {
+                    return MessageCategory.OrderPinsa;
+                }
+                if (Regex.IsMatch(message.Text, @"([Ss]nack)|(σν[άα]κ)"))
+                {
+                    return MessageCategory.OrderSnack;
+                }
+                if (Regex.IsMatch(message.Text, @"([Σσ]αντου[ιί]τ[ςσ])|([Ss]andwitch)"))
+                {
+                    return MessageCategory.OrderSandwitch;
+                }
             }
             return MessageCategory.Unknown;
+        }
+
+        public string FillPlaceholders(string text, SenderReceived sender)
+        {
+            var newText = text;
+            newText = text.Replace("<sender_name>", sender.Name);
+            return newText;
         }
     }
 }

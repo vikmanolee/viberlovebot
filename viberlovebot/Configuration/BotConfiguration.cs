@@ -3,7 +3,7 @@ namespace viberlovebot
     public class BotOptions
     {
         public string WelcomeMessage { get; set; }
-
+        public string DefaultMessage { get; set; }
         public SenderOptions Sender { get; set; }
 
         public class SenderOptions
