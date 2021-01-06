@@ -30,6 +30,7 @@ namespace viberlovebot
             });
             services.Configure<BotOptions>(Configuration.GetSection("Bot"));
             services.AddSingleton<IMessageTokenCache>(new MessageTokenCache(Configuration.GetValue<int>("MessageTokenCacheSize")));
+            services.AddSingleton<IMediaUrlResolver, MediaUrlResolver>();
             services.AddScoped<IMessageResponseService, MessageResponseService>();
             services.AddScoped<ISendMessageService, SendMessageService>();
             services.AddScoped<IReceivedMessageService, ReceivedMessageService>();

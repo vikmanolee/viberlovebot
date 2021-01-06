@@ -4,6 +4,7 @@ namespace viberlovebot.Enumerations
     {
         Unknown,
         KaliXronia,
-        Pasok
+        Pasok,
+        OrderStart
     }
 }

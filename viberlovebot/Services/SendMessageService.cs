@@ -35,6 +35,9 @@ namespace viberlovebot.Services
                 case ResponseMessageType.AnimatedGif:
                     UrlMessage(receiverId, response.MediaUrl);
                     break;
+                case ResponseMessageType.Picture:
+                    PictureMessage(receiverId, response.MediaUrl, response.Text);
+                    break;
                 default:
                     break;
             }
@@ -47,7 +50,7 @@ namespace viberlovebot.Services
                 Text = text,
                 Sender = new Sender { Name = _botOptions.Sender.Name }
             };
-            var response = await _api.SendTextMessage(message);
+            var response = await _api.SendMessage(message);
             HandleResponse(response);
         }
 
@@ -58,7 +61,7 @@ namespace viberlovebot.Services
                 StickerId = stickerId,
                 Sender = new Sender { Name = _botOptions.Sender.Name }
             };
-            var response = await _api.SendStickerMessage(message);            
+            var response = await _api.SendMessage(message);            
             HandleResponse(response);
         }
 
@@ -69,7 +72,19 @@ namespace viberlovebot.Services
                 Media = url,
                 Sender = new Sender { Name = _botOptions.Sender.Name }
             };
-            var response = await _api.SendUrlMessage(message);            
+            var response = await _api.SendMessage(message);            
+            HandleResponse(response);
+        }
+
+        public async void PictureMessage(string receiver, string url, string text = "")
+        {
+            var message = new PictureMessage {
+                Receiver = receiver,
+                Media = url,
+                Text = text,
+                Sender = new Sender { Name = _botOptions.Sender.Name }
+            };
+            var response = await _api.SendMessage(message);            
             HandleResponse(response);
         }
 

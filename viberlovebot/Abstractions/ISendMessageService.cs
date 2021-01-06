@@ -8,5 +8,6 @@ namespace viberlovebot.Abstractions
         void TextMessage(string receiver, string text);
         void StickerMessage(string receiver, int stickerId);
         void UrlMessage(string receiver, string url);
+        void PictureMessage(string receiver, string pictureUrl, string description);
     }
 }

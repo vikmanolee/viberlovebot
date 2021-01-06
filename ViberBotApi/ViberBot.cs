@@ -19,19 +19,8 @@ namespace ViberBotApi
             _client.AddAuthHeader(_configuration.AuthToken);
         }
 
-        public async Task<SendMessageResponse> SendTextMessage(TextMessage message)
-        {
-            var response = await PostJsonHttpClient(UrlResources.SendMessage(), message);
-            return await HandleResponse(response);
-        }
-
-        public async Task<SendMessageResponse> SendStickerMessage(StickerMessage message)
-        {
-            var response = await PostJsonHttpClient(UrlResources.SendMessage(), message);
-            return await HandleResponse(response);
-        }
-
-        public async Task<SendMessageResponse> SendUrlMessage(UrlMessage message)
+        public async Task<SendMessageResponse> SendMessage<TMessage>(TMessage message)
+            where TMessage : Message
         {
             var response = await PostJsonHttpClient(UrlResources.SendMessage(), message);
             return await HandleResponse(response);
