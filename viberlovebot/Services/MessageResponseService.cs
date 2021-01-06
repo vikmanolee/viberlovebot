@@ -30,6 +30,10 @@ namespace viberlovebot.Services
 
             switch (category)
             {
+                case MessageCategory.Love:
+                    responses.Add(new ResponseMessage{ Type = ResponseMessageType.Text, Text = "Κι εγώ αγάπη μου!"});
+                    responses.Add(new ResponseMessage{ Type = ResponseMessageType.Sticker, StickerId = 40108});
+                    break;
                 case MessageCategory.KaliXronia:
                     responses.Add(new ResponseMessage{ Type = ResponseMessageType.Text, Text = "Καλή χρονιά και χρόνια πολλά! Με υγεία κι ευτυχία το νέο έτος!"});
                     responses.Add(new ResponseMessage{ Type = ResponseMessageType.Sticker, StickerId = 5716});
@@ -70,6 +74,10 @@ namespace viberlovebot.Services
         {
             if (message.Type == MessageTypes.Text)
             {
+                if (Regex.IsMatch(message.Text, @"[Σσ]['\sε]?\s?αγαπ[αά]?[ωώ]"))
+                {
+                    return MessageCategory.Love;
+                }
                 if (Regex.IsMatch(message.Text, @"([Κκ]αλ[ηή] [Χχ]ρονι[αά])|([Χχ]ρ[όο]νια [Ππ]ολλ[άα])"))
                 {
                     return MessageCategory.KaliXronia;
@@ -90,7 +98,7 @@ namespace viberlovebot.Services
                 {
                     return MessageCategory.OrderSnack;
                 }
-                if (Regex.IsMatch(message.Text, @"([Σσ]αντου[ιί]τ[ςσ])|([Ss]andwitch)"))
+                if (Regex.IsMatch(message.Text, @"([Σσ][άα]ντουιτ[ςσ])|([Ss]andwitch)"))
                 {
                     return MessageCategory.OrderSandwitch;
                 }
